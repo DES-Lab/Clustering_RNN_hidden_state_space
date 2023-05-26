@@ -1,0 +1,59 @@
+coffee, gru, 1:32, 100% acc
+Conformance Testing with 1000 Random Strings Found 0 counterexamples.
+Clusters times automata size: 1
+NMI: 0.5700677724230988
+AMB: (0.2880889426581414, 0.17004316953962145, 0.6908927903982254, -0.0)
+Clusters times automata size: 2
+NMI: 0.5582523714494706
+AMB: (0.11955489265767229, 0.079697259613633, 0.6170586402860379, -0.0)
+Clusters times automata size: 4
+NMI: 0.505025891389129
+AMB: (0.023894884027294, 0.01995492210522659, 0.35618396924300044, -0.0)
+Clusters times automata size: 8
+NMI: 0.43533177732891515
+AMB: (0.01918274874399935, 0.013906911468147978, 0.3561987968853425, -0.0)
+Clusters times automata size: 16
+NMI: 0.38242425612824726
+AMB: (0.009735969708210229, 0.006004472862742042, 0.35619819055080704, -0.0)
+
+--------------------------------------------------
+tomita7, gru, 1:32, 100% acc
+
+Conformance Testing with 1000 Random Strings Found 0 counterexamples.
+Clusters times automata size: 1
+NMI: 0.8786713888731993
+AMB: (0.07957956384234526, 0.09366503987481466, 0.3978978192117263, -0.0)
+Clusters times automata size: 2
+NMI: 0.783382159639858
+AMB: (0.0, 0.0, -0.0, -0.0)
+Clusters times automata size: 4
+NMI: 0.6685395944170449
+AMB: (0.0, 0.0, -0.0, -0.0)
+Clusters times automata size: 8
+NMI: 0.5698994695243537
+AMB: (0.0, 0.0, -0.0, -0.0)
+Clusters times automata size: 16
+NMI: 0.5052065252456958
+AMB: (0.0, 0.0, -0.0, -0.0)
+
+--------------------------------------------------
+tomita7, rnn + relu, 1:32, 100% acc
+
+
+Early Stopping based on Patience
+Conformance Testing with 1000 Random Strings Found 0 counterexamples.
+Clusters times automata size: 1
+NMI: 0.32044011909411835
+AMB: (0.19633718853773297, 0.647182826904249, 0.9816859426886648, -0.0)
+Clusters times automata size: 2
+NMI: 0.3400911951106548
+AMB: (0.09676135602524243, 0.5990569361921932, 0.9676135602524243, -0.0)
+Clusters times automata size: 4
+NMI: 0.5758237584387865
+AMB: (0.05742951816005144, 0.18890426862424964, 0.6027995943083108, -0.0)
+Clusters times automata size: 8
+NMI: 0.6173091340452195
+AMB: (0.0021875011141531744, 0.007105308230431766, 0.08750004456612698, -0.0)
+Clusters times automata size: 16
+NMI: 0.5540334230506553
+AMB: (0.0, 0.0, -0.0, -0.0)

@@ -1,0 +1,31 @@
+digraph "rnn_data/tomita5_cluster_dfa_DBSCAN" {
+0 [label=0];
+1 [label=1];
+2 [label=2, shape=doublecircle];
+3 [label=3];
+4 [label=4];
+5 [label=5, shape=doublecircle];
+6 [label=6];
+7 [label=7];
+init [label=init, shape=doublecircle];
+0 -> 2  [label=0];
+0 -> 3  [label=1];
+1 -> 4  [label=0];
+1 -> 5  [label=1];
+2 -> 0  [label=0];
+2 -> 1  [label=1];
+3 -> 6  [label=0];
+3 -> 7  [label=1];
+4 -> 6  [label=0];
+4 -> 7  [label=1];
+5 -> 0  [label=0];
+5 -> 1  [label=1];
+6 -> 4  [label=0];
+6 -> 5  [label=1];
+7 -> 2  [label=0];
+7 -> 3  [label=1];
+init -> 0  [label=0];
+init -> 1  [label=1];
+__start0 [label="", shape=none];
+__start0 -> init  [label=""];
+}

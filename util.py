@@ -5,7 +5,9 @@ from math import log
 import numpy as np
 import torch
 from aalpy.base import SUL
+from sklearn.metrics import precision_score, recall_score
 
+from PushDownAutomaton import Pda
 from dim_reduction import reduce_dimensions
 
 
@@ -329,7 +331,7 @@ if __name__ == '__main__':
     print(a, a_inj)
 
 
-def compute_state_to_hidden_list(automaton, hidden_states, test_seqs):
+def compute_state_to_hidden_list(automaton, hidden_states, test_seqs, pda_stack_limit=None):
     state_to_hidden_state = defaultdict(list)
     hs_list = hidden_states.copy()
     if not isinstance(hs_list, list):
@@ -339,6 +341,45 @@ def compute_state_to_hidden_list(automaton, hidden_states, test_seqs):
         for i in walk:
             _ = automaton.step(i)
             state_id = automaton.current_state.state_id
+            if pda_stack_limit is not None:
+                if pda_stack_limit == -1 and isinstance(automaton, Pda):
+                    state_id = f"{state_id}_{automaton.top()}"
+                else:
+                    state_id = f"{state_id}_{min(len(automaton.config),pda_stack_limit)}"
             state_to_hidden_state[state_id].append(hs_list.pop(0))
     state_to_hidden_state_list = list(state_to_hidden_state.items())
     return state_to_hidden_state_list
+
+
+def get_accuracy_statistics(rnn, automaton, data):
+    num_diff_sequances = 0
+
+    actual_labels, predicted_labels = [], []
+
+    for input_seq, _ in data:
+        faulty_seq = False
+
+        automaton.reset_to_initial()
+        rnn.reset_hidden_state()
+
+        for i in input_seq:
+            rnn_output = rnn.step(i, return_hidden=False)
+            automaton_output = automaton.step(i)
+
+            actual_labels.append(automaton_output)
+            predicted_labels.append(rnn_output)
+
+            if rnn_output != automaton_output:
+                faulty_seq = True
+
+        if faulty_seq:
+            num_diff_sequances += 1
+
+    accuracy = 1 - (num_diff_sequances / len(data))
+    precision = precision_score(actual_labels, predicted_labels)
+    recall = recall_score(actual_labels, predicted_labels)
+    print(f'Sequance-wise match  : {accuracy}')
+    print(f'Precision: {precision}')
+    print(f'Recall   : {recall}')
+
+    return accuracy, precision, recall

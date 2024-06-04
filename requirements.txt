@@ -1,8 +1,8 @@
 torch
 pandas
 numpy
-sklearn
+scikit-learn
 aalpy
-matplotlib
+matplotlib==3.7.0
 imageio
 tikzplotlib

@@ -1,0 +1,277 @@
+Total number of experiments: 8
+tomita1
+Automated driver progress: 12.5%
+--------------------------------------------------
+rnn_data/models/exp_models/tomita1_gru_1_8_1_gpu.pt
+Model weights loaded
+Conformance Testing with 10000 Random Strings Found 0 counterexamples.
+RNN accuracy: 1.0
+Computing clustering functions and its ambiguities
+Time for DBSCAN_half : 2.1279959678649902
+Time for DBSCAN : 3.280611753463745
+Time for DBSCAN_quad : 5.233755826950073
+Time for k_means : 0.0670006275177002
+Time for k_means_4 : 0.14500045776367188
+Time for k_means_8 : 0.2251894474029541
+Time for OPTICS : 21.930208683013916
+Time for mean_shift : 4.141029596328735
+Time for mean_shift_4 : 1.9662437438964844
+Printing ambiguity values
+lda: ambiguity: 0.0	, weighted ambiguity 0.0
+lr: ambiguity: 0.0	, weighted ambiguity 0.0
+DBSCAN_half: ambiguity: 0.0	, weighted ambiguity 0.0
+DBSCAN: ambiguity: 0.0	, weighted ambiguity 0.0
+DBSCAN_quad: ambiguity: 0.45058921391739803	, weighted ambiguity 0.450589213917398
+k_means: ambiguity: 0.472737180356396	, weighted ambiguity 0.24528230249073418
+k_means_4: ambiguity: 0.0	, weighted ambiguity 0.0
+k_means_8: ambiguity: 0.0	, weighted ambiguity 0.0
+OPTICS: ambiguity: 0.0	, weighted ambiguity 0.0
+mean_shift: ambiguity: 0.0	, weighted ambiguity 0.0
+mean_shift_4: ambiguity: 0.0	, weighted ambiguity 0.0
+tomita3
+Automated driver progress: 25.0%
+--------------------------------------------------
+rnn_data/models/exp_models/tomita3_gru_1_20_1_gpu.pt
+Model weights loaded
+Conformance Testing with 10000 Random Strings Found 15 counterexamples.
+RNN accuracy: 0.9985
+Computing clustering functions and its ambiguities
+Time for DBSCAN_half : 7.665585041046143
+Time for DBSCAN : 7.83394193649292
+Time for DBSCAN_quad : 10.000977277755737
+Time for k_means : 0.13530945777893066
+Time for k_means_4 : 0.43325042724609375
+Time for k_means_8 : 0.7900753021240234
+Time for OPTICS : 32.07675647735596
+Time for mean_shift : 3.0633513927459717
+Time for mean_shift_4 : 3.4585063457489014
+Printing ambiguity values
+lda: ambiguity: 0.0012369054023713213	, weighted ambiguity 0.0015591853981580328
+lr: ambiguity: 0.0	, weighted ambiguity 0.0
+DBSCAN_half: ambiguity: 0.0	, weighted ambiguity 0.0
+DBSCAN: ambiguity: 0.0	, weighted ambiguity 0.0
+DBSCAN_quad: ambiguity: 0.9435502103767801	, weighted ambiguity 0.9435502103767801
+k_means: ambiguity: 0.0833767600821024	, weighted ambiguity 0.11429107942774121
+k_means_4: ambiguity: 0.0	, weighted ambiguity 0.0
+k_means_8: ambiguity: 0.0	, weighted ambiguity 0.0
+OPTICS: ambiguity: 0.003508181406191449	, weighted ambiguity 0.07231461064454824
+mean_shift: ambiguity: 0.3269053175133386	, weighted ambiguity 0.4592080214782066
+mean_shift_4: ambiguity: 0.0	, weighted ambiguity 0.0
+tomita7
+Automated driver progress: 37.5%
+--------------------------------------------------
+rnn_data/models/exp_models/tomita7_gru_1_20_1_gpu.pt
+Model weights loaded
+Conformance Testing with 10000 Random Strings Found 0 counterexamples.
+RNN accuracy: 1.0
+Computing clustering functions and its ambiguities
+Time for DBSCAN_half : 7.587216138839722
+Time for DBSCAN : 7.911830902099609
+Time for DBSCAN_quad : 10.138607740402222
+Time for k_means : 0.1420001983642578
+Time for k_means_4 : 0.4762871265411377
+Time for k_means_8 : 0.8529996871948242
+Time for OPTICS : 32.70205593109131
+Time for mean_shift : 7.26256799697876
+Time for mean_shift_4 : 3.2651307582855225
+Printing ambiguity values
+lda: ambiguity: 0.0	, weighted ambiguity 0.0
+lr: ambiguity: 0.0	, weighted ambiguity 0.0
+DBSCAN_half: ambiguity: 0.0	, weighted ambiguity 0.0
+DBSCAN: ambiguity: 0.0	, weighted ambiguity 0.0
+DBSCAN_quad: ambiguity: 0.9329770724855563	, weighted ambiguity 0.9329770724855562
+k_means: ambiguity: 0.08042884448133243	, weighted ambiguity 0.10870343122559072
+k_means_4: ambiguity: 0.0	, weighted ambiguity 0.0
+k_means_8: ambiguity: 0.0	, weighted ambiguity 0.0
+OPTICS: ambiguity: 0.0022514534333491366	, weighted ambiguity 0.04006995735225124
+mean_shift: ambiguity: 0.42200935714221527	, weighted ambiguity 0.6608048958178102
+mean_shift_4: ambiguity: 0.0	, weighted ambiguity 0.0
+coffee
+Automated driver progress: 50.0%
+--------------------------------------------------
+rnn_data/models/exp_models/coffee_gru_1_56_1_gpu.pt
+Model weights loaded
+Conformance Testing with 10000 Random Strings Found 7519 counterexamples.
+RNN accuracy: 0.2481
+Computing clustering functions and its ambiguities
+Time for DBSCAN_half : 6.43484091758728
+Time for DBSCAN : 6.484025239944458
+Time for DBSCAN_quad : 7.793877363204956
+Time for k_means : 0.33099913597106934
+Time for k_means_4 : 1.2989988327026367
+Time for k_means_8 : 2.8219964504241943
+Time for OPTICS : 33.627005100250244
+Time for mean_shift : 25.779836654663086
+Time for mean_shift_4 : 22.588662147521973
+Printing ambiguity values
+lda: ambiguity: 0.10390383351165904	, weighted ambiguity 0.019877080637296308
+lr: ambiguity: 0.04012293546424241	, weighted ambiguity 0.007989504384844156
+DBSCAN_half: ambiguity: 0.003456471526604932	, weighted ambiguity 0.02626703133091112
+DBSCAN: ambiguity: 0.0049051855855733835	, weighted ambiguity 0.005333694052789268
+DBSCAN_quad: ambiguity: 0.5513367113332713	, weighted ambiguity 0.5513367113332713
+k_means: ambiguity: 0.2525101558251024	, weighted ambiguity 0.2258127791693935
+k_means_4: ambiguity: 0.07393768985920972	, weighted ambiguity 0.04365056221052714
+k_means_8: ambiguity: 0.053838010729811696	, weighted ambiguity 0.031503127938551
+OPTICS: ambiguity: 0.004997402979179778	, weighted ambiguity 0.1355759436631405
+mean_shift: ambiguity: 0.397475940224626	, weighted ambiguity 0.4500146399530408
+mean_shift_4: ambiguity: 0.003926913346464489	, weighted ambiguity 0.006056297150558812
+mqtt
+Automated driver progress: 62.5%
+--------------------------------------------------
+rnn_data/models/exp_models/mqtt_gru_1_36_1_gpu.pt
+Model weights loaded
+Conformance Testing with 10000 Random Strings Found 10000 counterexamples.
+RNN accuracy: 0.0
+Computing clustering functions and its ambiguities
+Time for DBSCAN_half : 6.346669435501099
+Time for DBSCAN : 6.596812963485718
+Time for DBSCAN_quad : 7.5336127281188965
+Time for k_means : 0.11500167846679688
+Time for k_means_4 : 0.3173205852508545
+Time for k_means_8 : 0.5771205425262451
+Time for OPTICS : 31.879321575164795
+Time for mean_shift : 5.184718370437622
+Time for mean_shift_4 : 3.656700372695923
+Printing ambiguity values
+lda: ambiguity: 0.005599344881618384	, weighted ambiguity 0.002423954344098881
+lr: ambiguity: 0.0	, weighted ambiguity 0.0
+DBSCAN_half: ambiguity: 0.004991033001487451	, weighted ambiguity 0.011921884088187363
+DBSCAN: ambiguity: 0.013469616091319053	, weighted ambiguity 0.0019922193068508047
+DBSCAN_quad: ambiguity: 0.0	, weighted ambiguity 0.0
+k_means: ambiguity: 0.28042417353875854	, weighted ambiguity 0.22021189593165352
+k_means_4: ambiguity: 0.0406543095885979	, weighted ambiguity 0.010472576874301923
+k_means_8: ambiguity: 0.0	, weighted ambiguity 0.0
+OPTICS: ambiguity: 0.0017298896996183377	, weighted ambiguity 0.11256614019700124
+mean_shift: ambiguity: 0.35910340948384667	, weighted ambiguity 0.1083641402607797
+mean_shift_4: ambiguity: 0.0	, weighted ambiguity 0.0
+regex
+Automated driver progress: 75.0%
+--------------------------------------------------
+rnn_data/models/exp_models/regex_gru_1_56_1_gpu.pt
+Model weights loaded
+Conformance Testing with 10000 Random Strings Found 0 counterexamples.
+RNN accuracy: 1.0
+Computing clustering functions and its ambiguities
+Time for DBSCAN_half : 6.516592502593994
+Time for DBSCAN : 6.685923099517822
+Time for DBSCAN_quad : 7.71926212310791
+Time for k_means : 0.29900026321411133
+Time for k_means_4 : 0.9978244304656982
+Time for k_means_8 : 1.975965976715088
+Time for OPTICS : 34.50739860534668
+Time for mean_shift : 21.560295581817627
+Time for mean_shift_4 : 12.765571355819702
+Printing ambiguity values
+lda: ambiguity: 0.0	, weighted ambiguity 0.0
+lr: ambiguity: 0.0	, weighted ambiguity 0.0
+DBSCAN_half: ambiguity: 0.0	, weighted ambiguity 0.0
+DBSCAN: ambiguity: 0.0	, weighted ambiguity 0.0
+DBSCAN_quad: ambiguity: 0.5597141485276454	, weighted ambiguity 0.48155754403027856
+k_means: ambiguity: 0.13601350277498467	, weighted ambiguity 0.11613425395443569
+k_means_4: ambiguity: 0.0	, weighted ambiguity 0.0
+k_means_8: ambiguity: 0.0	, weighted ambiguity 0.0
+OPTICS: ambiguity: 0.0024022803785973875	, weighted ambiguity 0.13130312436074473
+mean_shift: ambiguity: 0.41203072081471737	, weighted ambiguity 0.5194070835553187
+mean_shift_4: ambiguity: 0.0	, weighted ambiguity 0.0
+CFG_L_12
+Automated driver progress: 87.5%
+--------------------------------------------------
+rnn_data/models/exp_models/CFG_L_12_gru_1_32_1_gpu.pt
+Model weights loaded
+Conformance Testing with 10000 Random Strings Found 1637 counterexamples.
+RNN accuracy: 0.8363
+Computing clustering functions and its ambiguities (stackless)
+Time for DBSCAN_half : 6.932815074920654
+Time for DBSCAN : 7.163837909698486
+Time for DBSCAN_quad : 8.572635173797607
+Time for k_means : 0.1940000057220459
+Time for k_means_4 : 0.5024459362030029
+Time for k_means_8 : 1.0477259159088135
+Time for OPTICS : 32.66067314147949
+Time for mean_shift : 9.245302200317383
+Time for mean_shift_4 : 4.627078056335449
+Computing clustering functions and its ambiguities (stackfull)
+Time for DBSCAN_half : 7.1429712772369385
+Time for DBSCAN : 7.130146741867065
+Time for DBSCAN_quad : 8.659327983856201
+Time for k_means : 0.4009666442871094
+Time for k_means_4 : 1.6179981231689453
+Time for k_means_8 : 3.476994276046753
+Time for OPTICS : 33.64316415786743
+Time for mean_shift : 8.632481098175049
+Time for mean_shift_4 : 4.470995903015137
+Printing stackless ambiguity values
+lda: ambiguity: 0.22604719370319432	, weighted ambiguity 0.09908057385140999
+lr: ambiguity: 0.16919835933423427	, weighted ambiguity 0.07293029962463661
+DBSCAN_half: ambiguity: 0.15072817889882426	, weighted ambiguity 0.17782666258579394
+DBSCAN: ambiguity: 0.1904282261715523	, weighted ambiguity 0.3694050283476089
+DBSCAN_quad: ambiguity: 0.7971570528659359	, weighted ambiguity 0.7971570528659359
+k_means: ambiguity: 0.3604593971906352	, weighted ambiguity 0.34743665143539315
+k_means_4: ambiguity: 0.21721874278650335	, weighted ambiguity 0.19304319086755578
+k_means_8: ambiguity: 0.20706769841255157	, weighted ambiguity 0.17689608506330232
+OPTICS: ambiguity: 0.08599295456387031	, weighted ambiguity 0.13279588997199696
+mean_shift: ambiguity: 0.6012829371062426	, weighted ambiguity 0.6382619947205388
+mean_shift_4: ambiguity: 0.1393207383548556	, weighted ambiguity 0.1272074282064175
+Printing stackful ambiguity values
+lda: ambiguity: 0.22604719370319432	, weighted ambiguity 0.09908057385140999
+lr: ambiguity: 0.16919835933423427	, weighted ambiguity 0.07293029962463661
+DBSCAN_half: ambiguity: 0.15072817889882426	, weighted ambiguity 0.17782666258579394
+DBSCAN: ambiguity: 0.1904282261715523	, weighted ambiguity 0.3694050283476089
+DBSCAN_quad: ambiguity: 0.7971570528659359	, weighted ambiguity 0.7971570528659359
+k_means: ambiguity: 0.3604593971906352	, weighted ambiguity 0.34743665143539315
+k_means_4: ambiguity: 0.21721874278650335	, weighted ambiguity 0.19304319086755578
+k_means_8: ambiguity: 0.20706769841255157	, weighted ambiguity 0.17689608506330232
+OPTICS: ambiguity: 0.08599295456387031	, weighted ambiguity 0.13279588997199696
+mean_shift: ambiguity: 0.6012829371062426	, weighted ambiguity 0.6382619947205388
+mean_shift_4: ambiguity: 0.1393207383548556	, weighted ambiguity 0.1272074282064175
+CFG_L_13
+Automated driver progress: 100.0%
+--------------------------------------------------
+rnn_data/models/exp_models/CFG_L_13_gru_1_30_1_gpu.pt
+Model weights loaded
+Conformance Testing with 10000 Random Strings Found 225 counterexamples.
+RNN accuracy: 0.9775
+Computing clustering functions and its ambiguities (stackless)
+Time for DBSCAN_half : 7.236566781997681
+Time for DBSCAN : 7.43453574180603
+Time for DBSCAN_quad : 8.541269063949585
+Time for k_means : 0.13595795631408691
+Time for k_means_4 : 0.4347341060638428
+Time for k_means_8 : 0.968407392501831
+Time for OPTICS : 31.552919626235962
+Time for mean_shift : 6.655929088592529
+Time for mean_shift_4 : 5.162182331085205
+Computing clustering functions and its ambiguities (stackfull)
+Time for DBSCAN_half : 6.706744432449341
+Time for DBSCAN : 6.737056016921997
+Time for DBSCAN_quad : 8.052319288253784
+Time for k_means : 0.3259999752044678
+Time for k_means_4 : 1.2276997566223145
+Time for k_means_8 : 2.289705514907837
+Time for OPTICS : 31.776498317718506
+Time for mean_shift : 6.872663497924805
+Time for mean_shift_4 : 5.484852313995361
+Printing stackless ambiguity values
+lda: ambiguity: 0.0	, weighted ambiguity 0.0
+lr: ambiguity: 0.0009055687796876219	, weighted ambiguity 0.0006793965966169525
+DBSCAN_half: ambiguity: 0.0014964065402985826	, weighted ambiguity 0.00944639635842929
+DBSCAN: ambiguity: 0.006189299521558987	, weighted ambiguity 0.00015638657683239422
+DBSCAN_quad: ambiguity: 0.9623572663530408	, weighted ambiguity 0.9623572663530409
+k_means: ambiguity: 0.0023717873159858705	, weighted ambiguity 0.0018987190180984118
+k_means_4: ambiguity: 0.0	, weighted ambiguity 0.0
+k_means_8: ambiguity: 0.0	, weighted ambiguity 0.0
+OPTICS: ambiguity: 0.003162067822204141	, weighted ambiguity 0.21672296518187237
+mean_shift: ambiguity: 0.19515147155403703	, weighted ambiguity 0.25306145490865795
+mean_shift_4: ambiguity: 0.0	, weighted ambiguity 0.0
+Printing stackful ambiguity values
+lda: ambiguity: 0.0	, weighted ambiguity 0.0
+lr: ambiguity: 0.0009055687796876219	, weighted ambiguity 0.0006793965966169525
+DBSCAN_half: ambiguity: 0.0014964065402985826	, weighted ambiguity 0.00944639635842929
+DBSCAN: ambiguity: 0.006189299521558987	, weighted ambiguity 0.00015638657683239422
+DBSCAN_quad: ambiguity: 0.9623572663530408	, weighted ambiguity 0.9623572663530409
+k_means: ambiguity: 0.0023717873159858705	, weighted ambiguity 0.0018987190180984118
+k_means_4: ambiguity: 0.0	, weighted ambiguity 0.0
+k_means_8: ambiguity: 0.0	, weighted ambiguity 0.0
+OPTICS: ambiguity: 0.003162067822204141	, weighted ambiguity 0.21672296518187237
+mean_shift: ambiguity: 0.19515147155403703	, weighted ambiguity 0.25306145490865795
+mean_shift_4: ambiguity: 0.0	, weighted ambiguity 0.0

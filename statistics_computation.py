@@ -1,201 +1,158 @@
 import pickle
 from collections import defaultdict
+from statistics import mean, stdev
 
 import matplotlib.pyplot as plt
-import tikzplotlib
+import numpy as np
+import scipy.stats
+from matplotlib import rcParams
 
-
-def read_measurement_picklefile(file_name, measurements):
-    file_content = []
-    with open(file_name, 'rb') as file:
-        try:
-            while True:
-                file_content.append(pickle.load(file))
-        except EOFError:
-            pass
-        file_content = file_content[0]
-        # print(file_content)
-        for entry in file_content:
-            exp_name = entry[0]
-            # print(exp_name)
-            if exp_name_select and exp_name_select not in exp_name:
-                continue
-            if exp_name_exclude and exp_name_exclude in exp_name:
-                continue
-            results = entry[1]
-            for result in results:
-                cluster_type = result[0]
-                if cluster_type == "conf_test":
-                    actual_data = [result[1], exp_name]
-                    measurements[cluster_type].append(actual_data)
-                else:
-                    # print(cluster_type)
-                    (avg_ambiguity, weighted_average, max_ambiguity, min_ambiguity) = result[1]
-                    n_clusters = result[2]
-                    data = []
-                    data.extend(result[1])
-                    data.append(n_clusters)
-                    data.append(exp_name)
-                    measurements[cluster_type].append(data)
-
-
-def read_file(file_name, measurements, exclude_cluster=None):
-    with open(file_name) as file:
-        lines = file.readlines()
-        lines = [line.rstrip() for line in lines]
-
-        exp_names = lines[1:len(lines):3]
-        exp_results = lines[2:len(lines):3]
-        exps = zip(exp_names, exp_results)
-        for (exp_name, result_string) in exps:
-            if exp_name_select and exp_name_select not in exp_name:
-                continue
-
-            result_json = result_string.replace("(", "[").replace(")", "]").replace("'", '"')
-            import json
-            parsed_result = json.loads(result_json)
-            for cluster_data in parsed_result:
-                cluster_type = cluster_data[0]
-                if cluster_type == "conf_test":
-                    actual_data = [cluster_data[1], exp_name]
-                else:
-                    if cluster_type in exclude_cluster:
-                        continue
-                    actual_data = cluster_data[1]
-                    n_clusters = cluster_data[2]
-                    actual_data.append(n_clusters)
-                    actual_data.append(exp_name)
-                measurements[cluster_type].append(actual_data)
-
-
-def compute_statistics():
-    measurements = defaultdict(list)
-    if retrained:
-        if path_to_retrained_pickle_results is None:
-            read_measurement_picklefile("experiment_results/retraining_clustering.pickle", measurements)
-            read_measurement_picklefile("experiment_results/retraining_clustering_2.pickle", measurements)
-        else:
-            read_measurement_picklefile(path_to_retrained_pickle_results, measurements)
-    else:
-        if path_to_normal_results is None:
-            read_file('experiment_results/stats_standard_kmeans_dbscan.txt', measurements, exclude_cluster=[])
-            read_file('experiment_results/stats_add_dbscan_kmeans_optics_meanshift.txt', measurements,
-                      exclude_cluster=['lda'])
-            read_file('experiment_results/stats_mean_shift_lr.txt', measurements, exclude_cluster=['lda'])
-        else:
-            read_file(path_to_normal_results, measurements)
-
-    filtered_exp_names = list()
-    keep_only_perfect_lda_and_la = False
-
-    for meas in measurements['lda']:
-        meas_lr = next(filter(lambda meas_lr: meas_lr[5] == meas[5], measurements['lr']))
-        if keep_only_perfect_lda_and_la and meas[1] <= eps and meas_lr[1] <= eps:
-            filtered_exp_names.append(meas[5])
-        elif not keep_only_perfect_lda_and_la:
-            filtered_exp_names.append(meas[5])
-
-    if conf_test_threshold is not None:
-        assert 'conf_test' in measurements.keys()
-        filtered_threshold_exps = []
-        for meas in measurements['conf_test']:
-            if keep_only_perfect_lda_and_la and meas[1] in filtered_exp_names:
-                filtered_threshold_exps.append(meas[1])
-            elif not keep_only_perfect_lda_and_la and meas[0] <= conf_test_threshold:
-                filtered_threshold_exps.append(meas[1])
-        filtered_exp_names = filtered_threshold_exps
-
-    print(f"Number of filtered exp names {len(filtered_exp_names)}")
-    measurements_filtered = dict()
-
-    for key, value in measurements.items():
-        if key == "conf_test":
-            continue
-        measurements_filtered[key] = list(
-            map(lambda data: data[measurement_index], filter(lambda data: data[5] in filtered_exp_names, value)))
-
-    measurements = measurements_filtered
-
-    fig1, ax1 = plt.subplots()
-    # ax1.set_ylabel('Ambiguity')
-    plt.xticks(rotation=90)
-
-    i = 0
-
-    # cluster_types = measurements.keys()  # ['DBSCAN_double', 'DBSCAN_triple', 'k_means', 'k_means_4',
-    # too keep the order
-    cluster_types = ['lda', 'lr', 'DBSCAN', 'DBSCAN_half', 'DBSCAN_double', 'DBSCAN_triple', 'DBSCAN_quad', 'k_means',
+all_cluster_types = ['lda', 'lr', 'DBSCAN', 'DBSCAN_half', 'DBSCAN_double', 'DBSCAN_triple', 'DBSCAN_quad', 'k_means',
                      'k_means_inc', 'k_means_dec', 'k_means_double', 'k_means_4', 'k_means_6', 'k_means_8', 'OPTICS',
                      'mean_shift', 'mean_shift_2', 'mean_shift_4', 'mean_shift_8']
 
-    # for GRUs
-    # cluster_types = ['lda', 'lr', 'DBSCAN', 'DBSCAN_double', 'k_means_6', 'k_means_8', 'mean_shift_4', 'mean_shift_8']
+redacted_cluster_types = ['lda', 'lr', 'DBSCAN', 'DBSCAN_double', 'k_means_6', 'k_means_8', 'OPTICS', 'mean_shift_4',
+                          'mean_shift_8']
 
-    print(f"#Experiments: {len(measurements['lr'])}")
-    for cluster_type in cluster_types:
-        i += 1
-        meas_datapoints = measurements[cluster_type]
-        avg_value = sum(meas_datapoints) / len(meas_datapoints)
-        import math
 
-        stddev = math.sqrt(1 / len(meas_datapoints) *
-                           sum(map(lambda v: (v - avg_value) ** 2, meas_datapoints)))
-        count_min = len(list(filter(lambda v: v < eps, meas_datapoints)))
-        max_val = max(meas_datapoints)
-        ax1.boxplot(meas_datapoints, labels=[cluster_type], positions=[i], sym='x', )
+def get_statistics(exp_set, ambiguity_values, accuracy_values, cluster_types_to_keep, measurement_metric, min_accuracy,
+                   network_type=None, keep_only_perfect_linear_separability=False):
+    assert exp_set in {'regular', 'stackless', 'stackful', 'top_of_stack'}
+    assert measurement_metric in {'amb', 'wamb', 'size'}
+    measurement_index_dict = {'amb': 0, 'wamb': 1, 'size': 4}
+    measurement_index = measurement_index_dict[measurement_metric]
 
-        print(f"Cluster type: {cluster_type}, avg: {avg_value}, stddev: {stddev}, max: {max_val}, #zeros: {count_min}")
+    if network_type and network_type not in {'relu', 'tanh', 'lstm', 'gru'}:
+        assert False
 
-    tikzplotlib.save("statistics_output.tex")
+    filtered_measurements = defaultdict(list)
 
+    for exp_name, values in ambiguity_values.items():
+        # sort by network type and accuracy
+        # TODO REVERT
+        # if exp_set not in exp_name or accuracy_values[exp_name] < min_accuracy:
+        #     continue
+        # if enabled, keep only perfect those experiments with perfect linear separability
+        if keep_only_perfect_linear_separability and (values['lda'][1] > 0 or values['lr'][1] > 0):
+            continue
+
+        # sort by network type
+        if network_type and network_type not in exp_name:
+            continue
+
+        for c in cluster_types_to_keep:
+            filtered_measurements[c].append(values[c][measurement_index])
+
+    len_filtered = len(list(filtered_measurements.values())[0])
+    if len_filtered == 0:
+        print('No experiments meet filter requirements')
+        return
+
+    fig1, ax1 = plt.subplots()
+    plt.xticks(rotation=90)
+
+    print(f'Number of all experiments:      {len([x for x in ambiguity_values.keys() if exp_set in x])}')
+    print(f'Number of filtered experiments: {len_filtered}')
+    for i, (k, v) in enumerate(filtered_measurements.items()):
+        ax1.boxplot(v, labels=[k], positions=[i+1], sym='x', flierprops={'alpha': 0.2})
+        print(f'Cluster Type {k}: Avg {mean(v)}, Stddev: {stdev(v)}, Max: {max(v)}, Zeros: {v.count(0)}')
+
+    plt.ylabel(measurement_metric)
+    plt.title(f'Exp. set: {exp_set}, Metric: {measurement_metric}, Min Acc: {min_accuracy}')
     plt.show()
+
+    import tikzplotlib
+    tikzplotlib.save('pda_wamb_0.2_top_of_stack.tex')
+
+
+def get_relationship_between_accuracy_and_wamb(accuracy_values, ambiguity_values):
+    with open('experiment_results/additional_ambiguity_analysis.pickle', 'rb') as handle:
+        data = pickle.load(handle)
+        for k, v in data.items():
+            key = k + 'regular' if 'CFG' not in k else k + 'stackless'
+            ambiguity_values[key] = {'k_means_8': v}
+
+    with open('experiment_results/additional_accurcy_analysis.pickle', 'rb') as handle:
+        data = pickle.load(handle)
+        for k, v in data.items():
+            key = k + 'regular' if 'CFG' not in k else k + 'stackless'
+            accuracy_values[key] = v[0]
+
+    regular_feature, regular_target = [], []
+    pda_feature, pda_target = [], []
+    for k, v in ambiguity_values.items():
+        if 'regular' in k:
+            regular_feature.append([v['k_means_8'][1]])
+            regular_target.append(accuracy_values[k])
+        if 'stackless' in k:
+            pda_feature.append([v['k_means_8'][1]])
+            pda_target.append(accuracy_values[k])
+
+    # Calculate the Spearman correlation coefficient
+    spearman_corr, _ = scipy.stats.pearsonr(np.array(regular_feature).flatten(), regular_target)
+    print("Pearson Correlation Coefficient (REG):", spearman_corr)
+
+    spearman_corr, _ = scipy.stats.pearsonr(np.array(pda_feature).flatten(), pda_target)
+    print("Pearson Correlation Coefficient (PDA):", spearman_corr)
+
+    for exp_name, targets, features in [('regular', regular_target, regular_feature),
+                                        ('pda', pda_target, pda_feature)]:
+        # Perform linear regression
+        slope, intercept = np.polyfit(np.array(targets).flatten(), np.array(features).flatten(), 1)
+        # Create the regression line using the slope and intercept
+        regression_line = slope * np.array(targets).flatten() + intercept
+
+        plt.plot(targets, regression_line, color='red', label='Regression Line')
+        plt.scatter(targets, features, alpha=0.05, s=10 * rcParams['lines.markersize'] ** 2)
+
+        plt.xlabel('Accuracy')
+        plt.ylabel('Wamb')
+        plt.legend(loc='upper left')
+        plt.title(f'RNNs trained on {exp_name}')
+        plt.show()
 
 
 if __name__ == '__main__':
-    # default values
-    measurement_metric = "wamb"  # "amb" "size"
-    measurement_index = 1 if measurement_metric == "wamb" else (0 if measurement_metric == "amb" else 4)
-    conf_test_threshold = 0.0
-    retrained = False
-    exp_name_select = "retrained" if retrained else None
-    exp_name_exclude = None
-    eps = 1e-6
+    paper_results = True
+    if paper_results:
+        # values obtained with experiment_runner and used in the paper
+        with open('experiment_results/new_accuracy_results_top_of_stack.pickle', 'rb') as handle:
+            accuracy_values = pickle.load(handle)
+        with open('experiment_results/ambiguity_results_top_of_stack.pickle', 'rb') as handle:
+            ambiguity_values = pickle.load(handle)
+    else:
+        # in case you recompute all values with automated_trainer script
+        with open('experiment_results/new_accuracy_results.pickle', 'rb') as handle:
+            accuracy_values = pickle.load(handle)
+        with open('experiment_results/new_ambiguity_results.pickle', 'rb') as handle:
+            ambiguity_values = pickle.load(handle)
 
-    exp_name_options = {'all': None, 'retrained': 'retrained', 'lstm': 'lstm', 'gru': 'gru', 'tanh': 'tanh', 'relu': 'relu'}
-    import argparse
+    # get weighted ambiguity and size plots for all experiments
+    for mm in ['wamb', ]:
+        # for exp_set in ['regular', 'stackful', 'stackless']:
+            exp_set = 'top_of_stack'
+            get_statistics(exp_set, ambiguity_values, accuracy_values,
+                           cluster_types_to_keep=all_cluster_types,
+                           measurement_metric=mm,
+                           min_accuracy=0.8,
+                           network_type=None,
+                           keep_only_perfect_linear_separability=False)
 
-    parser = argparse.ArgumentParser(description='Compute experiment statistic')
-    parser.add_argument('-metric', type=str, help='Measurement metric: either amb (ambiguity), wamb (weighted '
-                                                  'ambiguity), or size (cluster size)', nargs='?')
-    parser.add_argument('-min_accuracy', type=float, help='Consider only RNNs whose accuracy is greater or equal to '
-                                                          'selected value', nargs='?')
-    parser.add_argument('-experiment_set', type=str,
-                        help='all for all normal RNNs, retrained for noisy constructed RNNs, or one of '
-                             '{lstm, relu, tanh, gru} for only that network', nargs='?')
-    parser.add_argument('-data_file_normal', type=str,
-                        help='Path to a .txt file containing results of normal training and extraction ('
-                             'clustering_comparison results)',
-                        nargs='?')
-    parser.add_argument('-data_file_retrained', type=str, help='Path to a .pickle file containing results of '
-                                                               'retraining noisy networks ('
-                                                               'retraining_noisy_constructed_RNNs results)', nargs='?')
+    exit()
+    # show only GRUs for regular languages
+    get_statistics('regular', ambiguity_values, accuracy_values,
+                   cluster_types_to_keep=all_cluster_types,
+                   measurement_metric='wamb',
+                   min_accuracy=0.8,
+                   network_type='gru',
+                   keep_only_perfect_linear_separability=False)
 
-    args = parser.parse_args()
+    # show only regural languages with perfect linear separability
+    get_statistics('regular', ambiguity_values, accuracy_values,
+                   cluster_types_to_keep=all_cluster_types,
+                   measurement_metric='wamb',
+                   min_accuracy=0.8,
+                   network_type=None,
+                   keep_only_perfect_linear_separability=True)
 
-    path_to_normal_results, path_to_retrained_pickle_results = None, None
-
-    if args.experiment_set:
-        exp_name_select = exp_name_options[args.experiment_set]
-        if exp_name_select == 'retrained':
-            retrained = True
-    if args.metric:
-        measurement_metric = args.metric
-        measurement_index = 1 if measurement_metric == "wamb" else (0 if measurement_metric == "amb" else 4)
-    if args.min_accuracy:
-        conf_test_threshold = 1.0 - args.min_accuracy
-    if args.data_file_normal:
-        path_to_normal_results = args.data_file_normal
-    if args.data_file_retrained:
-        path_to_retrained_pickle_results = args.data_file_retrained
-
-    compute_statistics()
+    # get_relationship_between_accuracy_and_wamb(accuracy_values, ambiguity_values)

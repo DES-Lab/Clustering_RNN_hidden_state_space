@@ -1,17 +1,20 @@
 from random import shuffle
 
+import torch
 import torch.optim as optim
 from aalpy.utils import load_automaton_from_file
 
+from PushDownAutomaton import pda_for_L1
 from RNN import get_model, Optimization
 from automata_data_generation import generate_data_from_automaton, get_tomita, get_coffee_machine, \
     get_ssh, get_angluin, AutomatonDataset
 from methods import extract_automaton_from_rnn, conformance_test, \
-    extract_hidden_state_automaton_from_rnn, examine_clusters, examine_normalized_mutual_info_score
+    extract_hidden_state_automaton_from_rnn, examine_clusters
 from util import compute_ambiguity
 from visualization_util import visualize_hidden_states, visualize_hs_over_training
 
-experiments = {'tomita3': get_tomita(3),
+experiments = {'CFG_L_1': pda_for_L1(),
+               'tomita3': get_tomita(3),
                'tomita5': get_tomita(5),
                'tomita7': get_tomita(7),
                'coffee': get_coffee_machine(),
@@ -22,15 +25,16 @@ experiments = {'tomita3': get_tomita(3),
                'tree': load_automaton_from_file('automata_models/tree.dot', automaton_type='dfa',
                                                 compute_prefixes=True),
                'last_a': load_automaton_from_file('automata_models/last_a.dot', automaton_type='dfa',
-                                                  compute_prefixes=True)}
+                                                  compute_prefixes=True)
+               }
 
 device = None  # for auto detection
 
-exp_name = 'tomita7'
+exp_name = 'coffee'
 automaton = experiments[exp_name]
 
 # Number of training and validation samples
-num_training_samples = 30000
+num_training_samples = 50000
 num_val_samples = 4000
 
 # Do not learn the original automaton, but a mapping of sequance of inputs to reached state
@@ -51,7 +55,7 @@ model_type = 'rnn'
 activation_fun = 'relu'  # note that activation_fun value is irrelevant for GRU and LSTM
 input_dim = len(input_al)
 output_dim = len(output_al)
-hidden_dim = 32
+hidden_dim = 64
 layer_dim = 1
 batch_size = 64
 dropout = 0  # 0.1 if layer_dim > 1 else 0
@@ -92,40 +96,21 @@ model.eval()
 
 # check the RNN for accuracy on newly generated data
 conformance_test(model, automaton, n_tests=1000, max_test_len=30)
-# extract_automaton_from_rnn(model, input_al)
-# visualizes the hidden state space. Available dim. reduction techniques are in dim_reduction_funs in utils.py
-# visualize_hidden_states(model, automaton, validation_data, 'pca', process_hs_fun=process_hs_fun)
-# examine_clusters(model, automaton, validation_data, 'mean_shift')
-dimensions = 2
 
-# visualize_hs_over_training(opt, automaton, (train, val), validation_data, epochs=100, save_intervals=1,
-#                            dim_red_method='lda',
-#                            exp_name=exp_name, train=True)
-
-for k in [1,2,4,8,16]:
-    print(f'Clusters times automata size: {k}')
-    examine_normalized_mutual_info_score(model, automaton, validation_data, 'k_means', clustering_fun_args={'n_clusters': automaton.size * k})
-exit()
-
-visualize_hidden_states(model, automaton, validation_data, 'pca', map_hidden_to='state',
-                        process_hs_fun=process_hs_fun,)
-
-state_cluster_map = examine_clusters(model, automaton, validation_data[:100], 'mini_batch_k_means',
-                                     clustering_fun_args={'n_clusters': automaton.size})
+# function that maps states to clusters over executions of  random sequences
+state_cluster_map = examine_clusters(model, automaton, validation_data, 'k_means',
+                                     clustering_fun_args={'n_clusters': automaton.size * 8})
 
 amb = compute_ambiguity(state_cluster_map)
 
 for k, v in state_cluster_map.items():
     print(f'{k} : {v}')
 
-print(f'Computed ambiguity: {amb}')
+print(f'Computed ambiguity: {amb[0]}, Weighted ambiguity: {amb[1]}')
+exit()
+
 # extracts input-output automaton from RNN
 extract_automaton_from_rnn(model, input_al, automaton_type='moore')
-
-# creates clusters of hidden states and checks if they map to automaton states
-state_cluster_map = examine_clusters(model, automaton, validation_data, 'agglo')
-
-print(state_cluster_map)
 
 # visualizes the hidden state space over the training process
 visualize_hs_over_training(opt, automaton, (train, val), validation_data, epochs=10, save_intervals=1,
@@ -133,7 +118,7 @@ visualize_hs_over_training(opt, automaton, (train, val), validation_data, epochs
 
 # create clusters and try to learn a language of clusters
 extract_hidden_state_automaton_from_rnn(model, input_al, data=validation_data,
-                                        clustering_fun='mean_shift', process_hs_fun=process_hs_fun)
+                                        clustering_fun='mini_batch_k_means', process_hs_fun=process_hs_fun)
 
 # check the RNN for accuracy on newly generated data
 conformance_test(model, automaton, n_tests=10000, max_test_len=30)

@@ -19,36 +19,35 @@ save_dir = 'rnn_data/'
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 device_type = 'gpu' if device != 'cpu' else 'cpu'
 
-# experiments = [(get_tomita(1), 'tomita1'),
-#                (get_tomita(3), 'tomita3'),
-#                (get_tomita(5), 'tomita5'),
-#                (get_tomita(7), 'tomita7'),
-#                (get_Angluin_dfa(), 'angluin'),
-#                (get_mqtt_mealy(), 'mqtt'),
-#                (load_automaton_from_file('automata_models/regex_paper.dot', automaton_type='dfa'), 'regex')]
-#
-# randomly_generated_dfa = [f for f in listdir('automata_models/') if f[:3] == 'dfa']
-# randomly_generated_moore_machines = [f for f in listdir('automata_models/') if f[:5] == 'moore']
-#
-# for aut in randomly_generated_dfa:
-#     experiments.append((load_automaton_from_file(f'automata_models/{aut}', automaton_type='dfa'), aut))
-#
-# for aut in randomly_generated_moore_machines:
-#     experiments.append((load_automaton_from_file(f'automata_models/{aut}', automaton_type='moore'), aut))
+experiments = [(get_tomita(1), 'tomita1'),
+               (get_tomita(3), 'tomita3'),
+               (get_tomita(5), 'tomita5'),
+               (get_tomita(7), 'tomita7'),
+               (get_Angluin_dfa(), 'angluin'),
+               (get_mqtt_mealy(), 'mqtt'),
+               (load_automaton_from_file('automata_models/regex_paper.dot', automaton_type='dfa'), 'regex')]
 
-experiments = []
+randomly_generated_dfa = [f for f in listdir('automata_models/') if f[:3] == 'dfa']
+randomly_generated_moore_machines = [f for f in listdir('automata_models/') if f[:5] == 'moore']
+
+for aut in randomly_generated_dfa:
+    experiments.append((load_automaton_from_file(f'automata_models/{aut}', automaton_type='dfa'), aut))
+
+for aut in randomly_generated_moore_machines:
+    experiments.append((load_automaton_from_file(f'automata_models/{aut}', automaton_type='moore'), aut))
+
 # Add all context free languages
 experiments.extend([
-                    # (pda_for_L1(), 'CFG_L_1'),
-                    # (pda_for_L2(), 'CFG_L_2'),
-                    # (pda_for_L3(), 'CFG_L_3'),
-                    # (pda_for_L4(), 'CFG_L_4'),
-                    # (pda_for_L5(), 'CFG_L_5'),
-                    # (pda_for_L6(), 'CFG_L_6'),
-                    # (pda_for_L7(), 'CFG_L_7'),
-                    # (pda_for_L8(), 'CFG_L_8'),
-                    # (pda_for_L9(), 'CFG_L_9'),
-                    # (pda_for_L10(), 'CFG_L_10'),
+                    (pda_for_L1(), 'CFG_L_1'),
+                    (pda_for_L2(), 'CFG_L_2'),
+                    (pda_for_L3(), 'CFG_L_3'),
+                    (pda_for_L4(), 'CFG_L_4'),
+                    (pda_for_L5(), 'CFG_L_5'),
+                    (pda_for_L6(), 'CFG_L_6'),
+                    (pda_for_L7(), 'CFG_L_7'),
+                    (pda_for_L8(), 'CFG_L_8'),
+                    (pda_for_L9(), 'CFG_L_9'),
+                    (pda_for_L10(), 'CFG_L_10'),
                     (pda_for_L11(), 'CFG_L_11'),
                     (pda_for_L12(), 'CFG_L_12'),
                     (pda_for_L13(), 'CFG_L_13'),
@@ -75,8 +74,8 @@ perform_training = False
 accuracy_results = dict()
 clustering_results = dict()
 
-accuracy_file = 'new_accuracy_results'
-ambiguity_file = 'new_ambiguity_results'
+accuracy_file = 'your_accuracy_results'
+ambiguity_file = 'your_ambiguity_results'
 
 for automaton, exp_name in experiments:
     print(exp_name)
@@ -147,25 +146,28 @@ for automaton, exp_name in experiments:
                         print(f'Can not find weights file of: {model_weights_name}')
                         continue
 
-                # conf_test_res = 1 - conformance_test(model, automaton)
-                # accuracy_results[exp_rnn_config] = conf_test_res
+                conf_test_res = 1 - conformance_test(model, automaton)
+                accuracy_results[exp_rnn_config] = conf_test_res
 
                 if 'CFG' in exp_name:
-                    # print('Computing clustering functions and its ambiguities (stackless)')
-                    # stackless = compare_clustering_methods(automaton, model, validation_data)
+                    print('Computing clustering functions and its ambiguities (stackless)')
+                    stackless = compare_clustering_methods(automaton, model, validation_data)
+                    print('Computing clustering functions and its ambiguities (stack lenght)')
+                    stack_lenght = compare_clustering_methods(automaton, model, validation_data, pda_stack_limit=3)
                     print('Computing clustering functions and its ambiguities (top of stack)')
                     top_of_stack = compare_clustering_methods(automaton, model, validation_data, pda_stack_limit=-1)
 
-                    # clustering_results[exp_rnn_config + '_stackless'] = stackless
-                    clustering_results[exp_rnn_config + '_top_of_stack_2'] = top_of_stack
+                    clustering_results[exp_rnn_config + '_stackless'] = stackless
+                    clustering_results[exp_rnn_config + '_stack_lenght'] = stack_lenght
+                    clustering_results[exp_rnn_config + '_top_of_stack'] = top_of_stack
                     print(top_of_stack)
                 else:
                     print('Computing clustering functions and its ambiguities')
                     results = compare_clustering_methods(automaton, model, validation_data)
                     clustering_results[exp_rnn_config] = results
 
-                with open(f'experiment_results/{accuracy_file}_top_of_stack.pickle', 'wb') as handle:
+                with open(f'experiment_results/{accuracy_file}.pickle', 'wb') as handle:
                     pickle.dump(accuracy_results, handle, protocol=pickle.HIGHEST_PROTOCOL)
 
-                with open(f'experiment_results/{ambiguity_file}_top_of_stack.pickle', 'wb') as handle:
+                with open(f'experiment_results/{ambiguity_file}.pickle', 'wb') as handle:
                     pickle.dump(clustering_results, handle, protocol=pickle.HIGHEST_PROTOCOL)
